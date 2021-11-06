@@ -27,12 +27,14 @@ else:
 CONFIG_FILE = os.path.join(CONFIG_DIR, 'equalizerrc')
 PRESETS_FILE = os.path.join(CONFIG_DIR, 'equalizerrc.availablepresets')
 USER_PRESET_DIR = os.path.join(CONFIG_DIR, 'presets')
-SYSTEM_PRESET_DIR = os.path.join('@pkgdatadir@', 'presets')
+SYSTEM_PRESET_DIR = os.path.join('/usr/share/pulseaudio-equalizer', 'presets')
 if os.environ.get('GNOME_DESKTOP_SESSION_ID'):
     DESKTOP_ENVIRONMENT = "Gnome"
 else:
     DESKTOP_ENVIRONMENT = os.environ.get('DESKTOP_SESSION')
 
+print(CONFIG_DIR)
+print(SYSTEM_PRESET_DIR)
 
 #import Gtk
 #import gobject
@@ -45,6 +47,8 @@ eqconfig2 = configdir + '/equalizerrc.test'
 eqpresets = eqconfig + '.availablepresets'
 presetdir1 = configdir + '/presets'
 presetdir2 = '/usr/share/pulseaudio-equalizer/presets'
+
+print(eqconfig)
 
 TARGET_TYPE_URI_LIST = 80
 
@@ -70,18 +74,21 @@ def GetSettings():
     global headerbar
     global change_scale
 
-    print('Getting settings...')
+    print(f"Getting settings... {eqconfig}")
 
-    os.system('pulseaudio-equalizer interface.getsettings')
+    if not os.path.exists(eqconfig):
+        os.system('pulseaudio-equalizer interface.getsettings')
 
     f = open(eqconfig, 'r')
     rawdata = f.read().split('\n')
+    print(rawdata)
     f.close()
 
     rawpresets = {}
     f = open(eqpresets, 'r')    
     rawpresets = f.read().split('\n')
     f.close()
+    print(f"raw status: {rawdata[4]} {rawdata[5]} {rawdata[6]}")
     del rawpresets[len(rawpresets) - 1]
 
     rawpresets = list(set(rawpresets))
@@ -100,10 +107,12 @@ def GetSettings():
     ladspa_inputs = rawdata[10 + num_ladspa_controls:10 + num_ladspa_controls + num_ladspa_controls]
     #headerbar = int(rawdata[11])
 
+    print(f"getting status: {status} {rawdata[5]}")
     if status == 1:
         realstatus = 'Enabled'
     else:
         realstatus = 'Disabled'
+    print(f"getting realstatus: {realstatus}")
 
     windowtitle = 'PulseAudio ' + ladspa_label
 
@@ -120,6 +129,11 @@ def GetSettings():
 
 def ApplySettings():
     global change_scale
+    global init_stage
+    global status
+    if init_stage :
+        return
+        
     print('Applying settings...')
     f = open(eqconfig, 'w')
     del rawdata[:]
@@ -195,6 +209,7 @@ class Equalizer(Gtk.ApplicationWindow):
     menuhdr: Gtk.MenuButton = Gtk.Template.Child()
     presetsbox = Gtk.Template.Child()
     activehdr: Gtk.Switch = Gtk.Template.Child()
+    activestd: Gtk.Switch = Gtk.Template.Child()
     presetsbox1 = Gtk.Template.Child()
     about_headerbar: Gtk.ImageMenuItem = Gtk.Template.Child()
 
@@ -308,6 +323,8 @@ class Equalizer(Gtk.ApplicationWindow):
 
 
         if presetmatch == 1:
+            print(os.path.join(USER_PRESET_DIR, preset + '.preset'))
+            print(os.path.join(SYSTEM_PRESET_DIR, preset + '.preset'))
             if os.path.isfile(os.path.join(USER_PRESET_DIR, preset + '.preset')):
                 f = open(os.path.join(USER_PRESET_DIR, preset + '.preset'), 'r')
                 rawdata = f.read().split('\n')
@@ -445,6 +462,16 @@ class Equalizer(Gtk.ApplicationWindow):
 
     def on_eqenabled(self, action, state):
         global status
+        print(f"status: {status}")
+        print(f"statate: {state}")
+        status = int(state.get_boolean())
+        ApplySettings()
+        action.set_state(state)
+
+    def on_eqenabledstd(self, action, state):
+        global status
+        print(f"status std: {status}")
+        print(f"statate std: {state}")
         status = int(state.get_boolean())
         ApplySettings()
         action.set_state(state)
@@ -498,7 +525,7 @@ class Equalizer(Gtk.ApplicationWindow):
         # Apply settings
         ApplySettings()
 
-        action.set_enabled(False)
+        #action.set_enabled(False)
 
     @Gtk.Template.Callback()
     def on_about_activate(self, widget):
@@ -698,10 +725,11 @@ class Equalizer(Gtk.ApplicationWindow):
         super(Equalizer, self).__init__(*args, **kwargs)
         global headerbar
         global change_scale
-        GetSettings()
+        global status
+        #GetSettings()
 
         self.apply_event_source = None
-
+        
         headerbar = 0
         change_scale = 0
         if headerbar :
@@ -726,6 +754,9 @@ class Equalizer(Gtk.ApplicationWindow):
             self.actionbar.set_visible(True)
             self.about_headerbar.set_visible(False)
             self.window_title.set_visible(True)
+
+        self.activehdr.set_state(status == 1)
+        self.activestd.set_state(status == 1)
 
         # Equalizer bands
         global scale
@@ -793,6 +824,11 @@ class Equalizer(Gtk.ApplicationWindow):
         action.connect('change-state', self.on_eqenabled)
         self.add_action(action)
 
+        action = Gio.SimpleAction.new_stateful('eqenabledstd', None,
+                                               GLib.Variant('b', status))
+        action.connect('change-state', self.on_eqenabled)
+        self.add_action(action)
+
         action = Gio.SimpleAction.new('about', None)
         action.connect('activate', self.on_about_activate)
         self.add_action(action)
@@ -833,8 +869,13 @@ class Application(Gtk.Application):
         self.window = None
 
     def do_startup(self):
+        global init_stage
+        init_stage = 1
+
         Gtk.Application.do_startup(self)
         GetSettings()
+        #os.system('cat /home/lm/.config/pulse/equalizerrc')
+
 
         self.window = Equalizer(application=self)
 
@@ -858,13 +899,18 @@ class Application(Gtk.Application):
 
 
     def do_activate(self):
+        global init_stage
         if not self.window:
             self.window = Equalizer(application=self)
 
         self.window.present()
+        init_stage = 0
 
     def on_keepsettings(self, action, state):
         global persistence
+        global init_stage
+        if init_stage :
+            return
         persistence = int(state.get_boolean())
         ApplySettings()
         action.set_state(state)
@@ -872,8 +918,6 @@ class Application(Gtk.Application):
     def on_quit(self, action, param):
         Gio.Application.get_default().quit()
 
-
-
-
+os.system('cat /home/lm/.config/pulse/equalizerrc')
 app = Application()
 app.run(sys.argv)

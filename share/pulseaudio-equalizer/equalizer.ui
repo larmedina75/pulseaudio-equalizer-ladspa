@@ -422,7 +422,8 @@ JuanJo Ciarlante https://github.com/jjo
                 <property name="can-focus">True</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
-                <property name="action-name">win.eqenabled</property>
+                <property name="action-name">win.eqenabledstd</property>
+                <property name="active">True</property>
               </object>
               <packing>
                 <property name="pack-type">end</property>
@@ -506,6 +507,7 @@ JuanJo Ciarlante https://github.com/jjo
             <property name="halign">center</property>
             <property name="valign">center</property>
             <property name="action-name">win.eqenabled</property>
+            <property name="active">True</property>
           </object>
           <packing>
             <property name="pack-type">end</property>
@@ -551,7 +553,7 @@ JuanJo Ciarlante https://github.com/jjo
                 <property name="valign">center</property>
                 <property name="margin-end">2</property>
                 <property name="margin-bottom">1</property>
-                <property name="icon-name">document-properties</property>
+                <property name="icon-name">format-justify-fill</property>
               </object>
             </child>
           </object>

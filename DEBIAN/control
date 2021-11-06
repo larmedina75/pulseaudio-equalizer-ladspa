@@ -1,0 +1,12 @@
+Package: pulseaudio-equalizer-ladspa
+Version: 3.21.10
+Architecture: all
+Maintainer: Luis Armando Medina <lamedina@gmail.com>
+Installed-Size: 6
+Depends: swh-plugins, pulseaudio, python3-gi, libgtk-3-0
+Section: admin
+Priority: optional
+Homepage: https://comoinstalarlinux.com/software-en/
+Standards-Version: 4.0.0
+Description: PulseAudio Equalizer - LADSPA plugin graphical user interface
+ GUI for PulseAudio's LADSPA interface using Steve Harris' Multiband EQ (mbeq_1197) plugin

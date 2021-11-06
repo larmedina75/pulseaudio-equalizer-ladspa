@@ -138,5 +138,6 @@ dmypy.json
 cython_debug/
 
 *.sublime-project
+*.sublime-workspace
 *.ui~
 
