@@ -33,11 +33,12 @@ if os.environ.get('GNOME_DESKTOP_SESSION_ID'):
 else:
     DESKTOP_ENVIRONMENT = os.environ.get('DESKTOP_SESSION')
 
+if not os.path.exists('/usr/lib/ladspa/mbeq_1197.so'):
+    print("Warning: Missing pluseaudio plug-in. Please install the swh-plugins package. ")
+
 print(CONFIG_DIR)
 print(SYSTEM_PRESET_DIR)
 
-#import Gtk
-#import gobject
 from urllib.request import url2pathname, urlparse, unquote
 from gi.repository import GdkPixbuf, Gdk
 
@@ -47,8 +48,6 @@ eqconfig2 = configdir + '/equalizerrc.test'
 eqpresets = eqconfig + '.availablepresets'
 presetdir1 = configdir + '/presets'
 presetdir2 = '/usr/share/pulseaudio-equalizer/presets'
-
-print(eqconfig)
 
 TARGET_TYPE_URI_LIST = 80
 
@@ -74,7 +73,7 @@ def GetSettings():
     global headerbar
     global change_scale
 
-    print(f"Getting settings... {eqconfig}")
+    print(f"Getting settings...")
 
     if not os.path.exists(eqconfig):
         os.system('pulseaudio-equalizer interface.getsettings')
@@ -88,7 +87,7 @@ def GetSettings():
     f = open(eqpresets, 'r')    
     rawpresets = f.read().split('\n')
     f.close()
-    print(f"raw status: {rawdata[4]} {rawdata[5]} {rawdata[6]}")
+    #print(f"raw status: {rawdata[4]} {rawdata[5]} {rawdata[6]}")
     del rawpresets[len(rawpresets) - 1]
 
     rawpresets = list(set(rawpresets))
@@ -107,12 +106,12 @@ def GetSettings():
     ladspa_inputs = rawdata[10 + num_ladspa_controls:10 + num_ladspa_controls + num_ladspa_controls]
     #headerbar = int(rawdata[11])
 
-    print(f"getting status: {status} {rawdata[5]}")
+    #print(f"getting status: {status} {rawdata[5]}")
     if status == 1:
         realstatus = 'Enabled'
     else:
         realstatus = 'Disabled'
-    print(f"getting realstatus: {realstatus}")
+    #print(f"getting realstatus: {realstatus}")
 
     windowtitle = 'PulseAudio ' + ladspa_label
 
@@ -157,7 +156,7 @@ def ApplySettings():
     #rawdata.append(str(headerbar))
     f.close()
 
-    os.system('pulseaudio-equalizer interface.applysettings')
+    os.system('./pulseaudio-equalizer interface.applysettings')
     change_scale = 0
 
 def FormatLabels(x):
@@ -250,16 +249,16 @@ class Equalizer(Gtk.ApplicationWindow):
     def on_apply_event(self):
         global change_scale
         global presetmatch
-        print("on_apply_event")
-        print(f"change_scale: {change_scale}")
-        print(f"presetmatch: {presetmatch}")
+        #print("on_apply_event")
+        #print(f"change_scale: {change_scale}")
+        #print(f"presetmatch: {presetmatch}")
         ApplySettings()
         self.apply_event_source = None
         if change_scale == 1 and  presetmatch == 1 :
             presetmatch = ''
         change_scale = 0
-        print(f"change_scale: {change_scale}")
-        print(f"presetmatch: {presetmatch}")
+        #print(f"change_scale: {change_scale}")
+        #print(f"presetmatch: {presetmatch}")
 
         return False
 
@@ -267,7 +266,7 @@ class Equalizer(Gtk.ApplicationWindow):
     @Gtk.Template.Callback()
     def on_headerbarcheck(self, widget, **_kwargs):
         global preset
-        print("on_headerbarcheck")
+        #print("on_headerbarcheck")
         assert self.headerbarcheck == widget
         #print(dir(widget))
         if self.headerbarcheck.get_active() :
@@ -307,19 +306,19 @@ class Equalizer(Gtk.ApplicationWindow):
         global ladspa_controls
         global ladspa_inputs
 
-        print("update_preset")
+        #print("update_preset")
 
         self.lookup_action('remove').set_enabled(False)
-        print("before check:",presetmatch)
+        #print("before check:",presetmatch)
         presetmatch = ''
         for i in range(len(rawpresets)):
             if rawpresets[i] == preset:
                 print('Match!')
                 presetmatch = 1
 
-        print('presetsbox',self.presetsbox.get_child().get_text())
-        print('presetsbox1',self.presetsbox1.get_child().get_text())
-        print("after check:",presetmatch)
+        #print('presetsbox',self.presetsbox.get_child().get_text())
+        #print('presetsbox1',self.presetsbox1.get_child().get_text())
+        #print("after check:",presetmatch)
 
 
         if presetmatch == 1:
@@ -358,7 +357,7 @@ class Equalizer(Gtk.ApplicationWindow):
                 self.presetsbox.get_child().set_text(preset)
             else:
                 self.presetsbox1.get_child().set_text(preset)
-            ApplySettings()
+            #ApplySettings()
 
             #self.lookup_action('save').set_enabled(False)
         else:
@@ -373,15 +372,15 @@ class Equalizer(Gtk.ApplicationWindow):
         global presetmatch
         global change_scale
 
-        print("on_presetsbox")
+        #print("on_presetsbox")
         presetmatch = ''
 
-        print(f"preset: {preset}")
-        print(f"clearpreset: {clearpreset}")
-        print(f"presetmatch: {presetmatch}")
+        #print(f"preset: {preset}")
+        #print(f"clearpreset: {clearpreset}")
+        #print(f"presetmatch: {presetmatch}")
         
         active_hdr = self.headerbarcheck.get_active()
-        print(f"header: {active_hdr}")
+        #print(f"header: {active_hdr}")
 
         if self.headerbarcheck.get_active() :
             if not change_scale :
@@ -918,6 +917,6 @@ class Application(Gtk.Application):
     def on_quit(self, action, param):
         Gio.Application.get_default().quit()
 
-os.system('cat /home/lm/.config/pulse/equalizerrc')
+#os.system('cat /home/lm/.config/pulse/equalizerrc')
 app = Application()
 app.run(sys.argv)

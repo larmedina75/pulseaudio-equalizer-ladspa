@@ -7,13 +7,13 @@
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <property name="program-name">Pulseaudio Equalizer</property>
-    <property name="version">2021.10</property>
+    <property name="version">2021.11</property>
     <property name="copyright" translatable="yes">
 Copyleft (ɔ) 2018 - 2021 
 by Luis Armando Medina Avitia. &lt;lamedina@gmail.com&gt;
 México
 </property>
-    <property name="comments" translatable="yes">A simple pulseaudio equalizer for Gnome
+    <property name="comments" translatable="yes">A simple pulseaudio equalizer for Linux
 Enjoy this multiband equalizer to get a better sound 
 when you use PulseAudio</property>
     <property name="website">https://www.comoinstalarlinux.com/pulseaudio-equalizer-ladspa/</property>

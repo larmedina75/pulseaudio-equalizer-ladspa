@@ -4,6 +4,13 @@ This equalizer clearly is more potent and easy to use than prepious versions.
 
 I like to play Spotify or other audio source and get a good sound. Other equalizers works grate but use only Gnome 3 header bar and I do really hate this header bars distribution, so I try to fix this and add some extra featues. 
 
+## Features on version 2021.11
+
+  * Improves detectios of actions and changes on pesets
+  * Fixed detection of pulseaudio equalizer status on initializatoin
+  * Fixed bad sync to header bar and tool bar controls (preset box and enable/disable switch)
+  * Fixed error when equzliaer plugin for pulse audios is not present
+
 ## Features on version 2021.10
 
   * Export a preset 
