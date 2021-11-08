@@ -1,3 +1,4 @@
 #!/bin/sh
 set -e
-echo 'Installing program : zenity_hello.sh ......' | zenity --text-info
+
+sudo xdg-desktop-menu install /usr/share/applications/pulseaudio-equalizer.desktop

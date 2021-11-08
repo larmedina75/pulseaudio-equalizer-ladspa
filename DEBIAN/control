@@ -1,5 +1,5 @@
 Package: pulseaudio-equalizer-ladspa
-Version: 3.21.10
+Version: 2021.11.0
 Architecture: all
 Maintainer: Luis Armando Medina <lamedina@gmail.com>
 Installed-Size: 6
