@@ -23,7 +23,7 @@ PA_CURRENT_PRESET=""
 
 PRESET_DIR1=$HOME/.config/pulse/presets
 PRESET_DIR2=/usr/share/pulseaudio-equalizer/presets
-SCRIPT_NAME=pulseaudio-equalizer
+SCRIPT_NAME=./pulseaudio-equalizer
 SCRIPT_VERSION="4.0 (29.01.2017)"
 CONFIG_NAME=$HOME/.config/pulse/equalizerrc
 LOG_NAME=$HOME/pulseaudio-equalizer.log
@@ -354,14 +354,14 @@ if [ "$1" = "disable" -o "$1" = "enable" ]; then
   echo >>/tmp/eqcommands.sh "set-sink-mute $PA_MASTER_SINK $PA_CURRENT_MUTE"
 
   # Execute all queued commands (for potential speed benefit)...
-  pacmd </tmp/eqcommands.sh >/dev/null
+  #pacmd </tmp/eqcommands.sh >/dev/null
 fi
 
 if [ "$1" = "enable" ]; then
   echo "-------------------------------------"
   echo "Current operation: enabling equalizer"
   echo "-------------------------------------"
-  echo -n >/tmp/eqcommands.sh
+  #echo -n >/tmp/eqcommands.sh
 
   # Unload & reload stream-restore module with restore_device option disabled (to ensure that previously cached per-client sinks are not used)
   echo "Unloading & reloading stream-restore module..."
@@ -391,6 +391,10 @@ if [ "$1" = "enable" ]; then
   echo >>/tmp/eqcommands.sh "$(pacmd "list-sink-inputs" | grep 'index: ' | sed 's/    index: /move-sink-input /g' | sed "s/$/ $PA_LADSPA_SINK/g")"
 
   # Execute all queued commands (for potential speed benefit)...
+  pacmd </tmp/eqcommands.sh >/dev/null
+fi
+
+if [ "$1" = "disable" ]; then
   pacmd </tmp/eqcommands.sh >/dev/null
 fi
 
