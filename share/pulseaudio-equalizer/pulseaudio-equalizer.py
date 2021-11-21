@@ -87,7 +87,7 @@ def GetSettings():
     f = open(eqpresets, 'r')    
     rawpresets = f.read().split('\n')
     f.close()
-    #print(f"raw status: {rawdata[4]} {rawdata[5]} {rawdata[6]}")
+
     del rawpresets[len(rawpresets) - 1]
 
     rawpresets = list(set(rawpresets))
@@ -104,7 +104,6 @@ def GetSettings():
     num_ladspa_controls = int(rawdata[9])
     ladspa_controls = rawdata[10:10 + num_ladspa_controls]
     ladspa_inputs = rawdata[10 + num_ladspa_controls:10 + num_ladspa_controls + num_ladspa_controls]
-    #headerbar = int(rawdata[11])
 
     #print(f"getting status: {status} {rawdata[5]}")
     if status == 1:
@@ -153,10 +152,10 @@ def ApplySettings():
 
     for i in rawdata:
         f.write(str(i) + '\n')
-    #rawdata.append(str(headerbar))
+    
     f.close()
 
-    os.system('./pulseaudio-equalizer interface.applysettings')
+    os.system('pulseaudio-equalizer interface.applysettings')
     change_scale = 0
 
 def FormatLabels(x):
@@ -197,7 +196,8 @@ def FormatLabels(x):
     if len(c) < 2 and len(suffix) == 3:
         whitespace1 = '  '
 
-@Gtk.Template(filename='../share/pulseaudio-equalizer/equalizer.ui')
+#@Gtk.Template(filename='../share/pulseaudio-equalizer/equalizer.ui')
+@Gtk.Template(filename='/usr/share/pulseaudio-equalizer/equalizer.ui')
 class Equalizer(Gtk.ApplicationWindow):
     __gtype_name__= "Equalizer"
 
@@ -449,6 +449,7 @@ class Equalizer(Gtk.ApplicationWindow):
             ApplySettings()
 
             # Refresh (and therefore, sort) preset list
+            os.system('pulseaudio-equalizer interface.getsettings')
             GetSettings()
 
             # Repopulate preset list into ComboBox
@@ -584,6 +585,7 @@ class Equalizer(Gtk.ApplicationWindow):
                 ApplySettings()
 
                 # Refresh (and therefore, sort) preset list
+                os.system('pulseaudio-equalizer interface.getsettings')
                 GetSettings()
 
                 # Repopulate preset list into ComboBox
@@ -612,9 +614,11 @@ class Equalizer(Gtk.ApplicationWindow):
         global presets
         global rawpresets
 
-        dialog = Gtk.FileChooserDialog('Import Preset...',
-                None, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL,
-                Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        dialog = Gtk.FileChooserDialog(title='Import Preset...',
+                                       parent=None,
+                                       action=Gtk.FileChooserAction.OPEN)
+        dialog.add_buttons(Gtk.STOCK_CANCEL,Gtk.ResponseType.CANCEL)
+        dialog.add_buttons(Gtk.STOCK_OK, Gtk.ResponseType.OK)
         dialog.set_default_response(Gtk.ResponseType.OK)
 
         filter = Gtk.FileFilter()
@@ -642,20 +646,32 @@ class Equalizer(Gtk.ApplicationWindow):
                     print("Preset imported successfully.")
 
                     # Refresh (and therefore, sort) preset list
+                    os.system('pulseaudio-equalizer interface.getsettings')
                     GetSettings()
 
                     # Repopulate preset list into ComboBox
-                    model1 = presetsbox1.get_model()
-                    presetsbox1.set_model(None)
+                    model0 = self.presetsbox.get_model()
+                    #self.presetsbox.set_model(None)
+                    self.presetsbox.remove_all()
+                    model0.clear()
+                    model1 = self.presetsbox1.get_model()
+                    #self.presetsbox1.set_model(None)
+                    self.presetsbox1
                     model1.clear()
-                    print(rawpresets)
+                    
                     boxindex = 0
                     for i in range(len(rawpresets)):
-                        model1.append( [rawpresets[i]] )
+                        print(i)
+                        #model0.append( [rawpresets[i]] )
+                        #model1.append( [rawpresets[i]] )
+                        self.presetsbox.append_text(rawpresets[i])
+                        self.presetsbox1.append_text(rawpresets[i])
                         if rawpresets[i] == rawdata[4]:
                             boxindex = i
-                    presetsbox1.set_model(model1)
-                    presetsbox1.set_active(boxindex)
+                    #self.presetsbox.set_model(model0)
+                    #self.presetsbox1.set_model(model1)
+                    self.presetsbox.set_active(boxindex)
+                    self.presetsbox1.set_active(boxindex)
 
         dialog.destroy()
 

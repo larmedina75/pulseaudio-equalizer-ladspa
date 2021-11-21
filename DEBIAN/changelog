@@ -1,23 +1,24 @@
-pulseaudio-equalizer-ladspa (2021.11.0-0extras) ; urgency=low
+pulseaudio-equalizer-ladspa (2021.11.1-0extras) ; urgency=low
 
 version 2021.11
 
-  * Improves detectios of actions and changes on pesets
-  * Fixed detection of pulseaudio equalizer status on initializatoin
-  * Fixed bad sync to header bar and tool bar controls (preset box and enable/disable switch)
-  * Fixed error when equzliaer plugin for pulse audios is not present
+  * Fixed preset file import Error, dialog freeze
+  * Improves detection of actions and preset changes
+  * Fixed detection of PulseAudio equalizer status on initialization
+  * Fixed bad sync to header bar and toolbar controls (preset box and enable/disable switch)
+  * Fixed error when equalizer plugin for PulseAudio is not present
 
 version 2021.10
 
   * Export a preset 
   * Import a preset
-  * Gnome 3 header bar enable / disable
-  * Option to hav a traditional interface (menu and tool-bar, yeah I do hate header bars)
-  * Save modified frecuencies set as a new preset
+  * Gnome 3 header bar enable/disable switch
+  * Option to have a traditional interface (menu and tool-bar, yeah I do hate header bars)
+  * Save modified frequencies set as a new preset
   * Delete local conf. presets
   * Enhanced Save Preset
-  * About dialog and credits
-  * Equilizer polished inteface
+  * About dialog, credits, and license
+  * Equalizer polished interface
 
 version 2.7.2
 
