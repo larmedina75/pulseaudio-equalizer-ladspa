@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+
+sudo mkdir -p /usr/share/pulseaudio-equalizer/presets

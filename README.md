@@ -1,33 +1,37 @@
 # Pulseaudio Equalizer
-A LADSPA based multiband equalizer approach for getting better sound out of pulseaudio.
-This equalizer clearly is more potent and easy to use than prepious versions.
+A LADSPA based multiband equalizer approach for getting better sound out of PulseAudio.
+This equalizer clearly is more potent and easy to use than previous versions.
 
-I like to play Spotify or other audio source and get a good sound. Other equalizers works grate but use only Gnome 3 header bar and I do really hate this header bars distribution, so I try to fix this and add some extra featues. 
+I like to play Spotify or other audio sources and get a good sound. Other equalizers work great but it uses Gnome 3 header bar and I do really hate this header bars distribution, so I try to fix this, and I add some extra features. 
+
+
+![Image of Pulseaudio equalizer for Linux](https://www.comoinstalarlinux.com/wp-content/uploads/pulseaudio-equalizer-ladspa-2021.11-comoinstalarlinux.com-equalizer-ecualizador-liunx-ubuntu-mint-debian-mx-gtk3-gnome3.png)
 
 ## Features on version 2021.11
 
-  * Improves detectios of actions and changes on pesets
-  * Fixed detection of pulseaudio equalizer status on initializatoin
-  * Fixed bad sync to header bar and tool bar controls (preset box and enable/disable switch)
-  * Fixed error when equzliaer plugin for pulse audios is not present
+  * Fixed preset file import Error, dialog freeze
+  * Improves detection of actions and preset changes
+  * Fixed detection of PulseAudio equalizer status on initialization
+  * Fixed bad sync to header bar and toolbar controls (preset box and enable/disable switch)
+  * Fixed error when equalizer plugin for PulseAudio is not present
 
 ## Features on version 2021.10
 
   * Export a preset 
   * Import a preset
-  * Gnome 3 header bar enable / disable
-  * Option to hav a traditional interface (menu and tool-bar, yeah I do hate header bars)
-  * Save modified frecuencies set as a new preset
+  * Gnome 3 header bar enable/disable switch
+  * Option to have a traditional interface (menu and tool-bar, yeah I do hate header bars)
+  * Save modified frequencies set as a new preset
   * Delete local conf. presets
   * Enhanced Save Preset
-  * About dialog and credits
-  * Equilizer polished inteface
+  * About dialog, credits, and license
+  * Equalizer polished interface
 
 ## Todo
 
-  * Automatically detect non Gnome 3 Destop environments 
+  * Automatically detect non Gnome 3 Desktop environments 
   * Export all user presets
-  * Enabled import presets by drag and drop a .preset file
+  * Enabled import presets by drag&drop a .preset file
 
 ### Original Sources
 
@@ -39,7 +43,7 @@ https://github.com/jjo/config/tree/master/.pulse
 
 If you think this software is useful or you want to support its development and maintenance, make a donation.
 
-You can contribute from 0.001 to 1 bitcoin or just a tip for cup of coffee, caffeine always helps to write more and better software.
+You can contribute from 0.00004 to 1 bitcoin or just a tip for a cup of coffee, caffeine always helps to write more and better software.
 
 BTC: 3CvPpZKtX6n4qXrscJNqcwL5Ps5Y1Ydkex  
 XMR: 42yQLLnxiNR2teFXBorZi3cpARqRDUfcMDTHJMyUry3mB8nH8jiSPUJgtrjWPL5jMu9paHU7fsemhdNub3Xo5itfQwwMiVG  
