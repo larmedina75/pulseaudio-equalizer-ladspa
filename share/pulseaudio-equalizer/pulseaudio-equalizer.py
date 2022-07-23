@@ -48,7 +48,7 @@ eqconfig2 = configdir + '/equalizerrc.test'
 eqpresets = eqconfig + '.availablepresets'
 presetdir1 = configdir + '/presets'
 presetdir2 = '/usr/share/pulseaudio-equalizer/presets'
-pulseaudio_scrip =  "../bin/pulseaudio-equalizer" #"pulseaudio-equalizer"
+pulseaudio_scrip =  "pulseaudio-equalizer" #"pulseaudio-equalizer"
 
 TARGET_TYPE_URI_LIST = 80
 
@@ -512,8 +512,12 @@ class Equalizer(Gtk.ApplicationWindow):
         # Clear preset list from ComboBox
         self.presetsbox.remove_all()
         self.presetsbox1.remove_all()
+       
+        # Apply settings (which will save new preset as default)
+        ApplySettings()
 
         # Refresh (and therefore, sort) preset list
+        os.system(f'{pulseaudio_scrip} interface.getsettings')
         GetSettings()
 
         # Repopulate preset list into ComboBox
@@ -522,13 +526,6 @@ class Equalizer(Gtk.ApplicationWindow):
             self.presetsbox1.append_text(rawpresets[i])
 
         preset = ''
-        
-        # Apply settings (which will save new preset as default)
-        ApplySettings()
-
-        # Refresh (and therefore, sort) preset list
-        os.system(f'{pulseaudio_scrip} interface.getsettings')
-        GetSettings()
 
     @Gtk.Template.Callback()
     def on_about_activate(self, widget):
