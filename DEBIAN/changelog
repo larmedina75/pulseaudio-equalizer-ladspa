@@ -1,18 +1,23 @@
-pulseaudio-equalizer-ladspa (2021.11.0-1extras) ; urgency=low
+pulseaudio-equalizer-ladspa (2022.07.0-0_all) ; urgency=low
+
+version 2022.07
+
+  * Import presets by drag and drop a .preset file, feature enabled again.
+  * Fixed error that mishandle the actual preset list when a personal preset is deleted
 
 version 2021.11
 
-  * Improves detectios of actions and changes on pesets
-  * Fixed detection of pulseaudio equalizer status on initializatoin
+  * Improves detection of actions and changes on pesets
+  * Fixed detection of pulseaudio equalizer status on initialization
   * Fixed bad sync to header bar and tool bar controls (preset box and enable/disable switch)
-  * Fixed error when equzliaer plugin for pulse audios is not present
+  * Fixed error when equzliaer plugin for pulse audio is not present
 
 version 2021.10
 
   * Export a preset 
   * Import a preset
   * Gnome 3 header bar enable / disable
-  * Option to hav a traditional interface (menu and tool-bar, yeah I do hate header bars)
+  * Option to get a traditional interface (menu and tool-bar, yeah I do hate header bars)
   * Save modified frecuencies set as a new preset
   * Delete local conf. presets
   * Enhanced Save Preset

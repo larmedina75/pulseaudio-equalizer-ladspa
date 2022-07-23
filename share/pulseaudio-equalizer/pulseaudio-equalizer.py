@@ -48,6 +48,7 @@ eqconfig2 = configdir + '/equalizerrc.test'
 eqpresets = eqconfig + '.availablepresets'
 presetdir1 = configdir + '/presets'
 presetdir2 = '/usr/share/pulseaudio-equalizer/presets'
+pulseaudio_scrip =  "../bin/pulseaudio-equalizer" #"pulseaudio-equalizer"
 
 TARGET_TYPE_URI_LIST = 80
 
@@ -76,7 +77,7 @@ def GetSettings():
     print(f"Getting settings...")
 
     if not os.path.exists(eqconfig):
-        os.system('pulseaudio-equalizer interface.getsettings')
+        os.system(f'{pulseaudio_scrip} interface.getsettings')
 
     f = open(eqconfig, 'r')
     rawdata = f.read().split('\n')
@@ -155,7 +156,7 @@ def ApplySettings():
     
     f.close()
 
-    os.system('pulseaudio-equalizer interface.applysettings')
+    os.system(f'{pulseaudio_scrip} interface.applysettings')
     change_scale = 0
 
 def FormatLabels(x):
@@ -399,7 +400,7 @@ class Equalizer(Gtk.ApplicationWindow):
 
     def on_resetsettings(self, action=None, param=None):
         print('Resetting to defaults...')
-        os.system('pulseaudio-equalizer interface.resetsettings')
+        os.system(f'{pulseaudio_scrip} interface.resetsettings')
         GetSettings()
 
         self.lookup_action('eqenabled').set_state(GLib.Variant('b', status))
@@ -444,12 +445,11 @@ class Equalizer(Gtk.ApplicationWindow):
             self.presetsbox.remove_all()
             self.presetsbox1.remove_all()
 
-
             # Apply settings (which will save new preset as default)
             ApplySettings()
 
             # Refresh (and therefore, sort) preset list
-            os.system('pulseaudio-equalizer interface.getsettings')
+            os.system(f'{pulseaudio_scrip} interface.getsettings')
             GetSettings()
 
             # Repopulate preset list into ComboBox
@@ -522,10 +522,13 @@ class Equalizer(Gtk.ApplicationWindow):
             self.presetsbox1.append_text(rawpresets[i])
 
         preset = ''
-        # Apply settings
+        
+        # Apply settings (which will save new preset as default)
         ApplySettings()
 
-        #action.set_enabled(False)
+        # Refresh (and therefore, sort) preset list
+        os.system(f'{pulseaudio_scrip} interface.getsettings')
+        GetSettings()
 
     @Gtk.Template.Callback()
     def on_about_activate(self, widget):
@@ -585,7 +588,7 @@ class Equalizer(Gtk.ApplicationWindow):
                 ApplySettings()
 
                 # Refresh (and therefore, sort) preset list
-                os.system('pulseaudio-equalizer interface.getsettings')
+                os.system(f'{pulseaudio_scrip} interface.getsettings')
                 GetSettings()
 
                 # Repopulate preset list into ComboBox
@@ -646,7 +649,7 @@ class Equalizer(Gtk.ApplicationWindow):
                     print("Preset imported successfully.")
 
                     # Refresh (and therefore, sort) preset list
-                    os.system('pulseaudio-equalizer interface.getsettings')
+                    os.system(f'{pulseaudio_scrip} interface.getsettings')
                     GetSettings()
 
                     # Repopulate preset list into ComboBox
@@ -735,6 +738,62 @@ class Equalizer(Gtk.ApplicationWindow):
             f.close()
 
         dialog.destroy()
+    
+    def on_drag_data_received(self, widget, context, x, y, selection, target_type, timestamp):
+        global preset
+        global presets
+        global rawpresets
+
+        if target_type == TARGET_TYPE_URI_LIST:
+            uris =  selection.get_uris()
+            print( 'uris', uris ) 
+             
+            for uri in uris:
+                varPathRaw = urlparse(uri).path
+                varPathDecode = unquote(varPathRaw)
+
+                if os.path.isfile(varPathDecode): # is it file?
+                    print('opening file ',varPathDecode)
+                    f = open(varPathDecode, 'r')
+                    rawdata = f.read().split('\n')
+                    f.close
+                    print(rawdata) 
+
+                    if rawdata[0] == "mbeq_1197"  and rawdata[1] == "mbeq" and rawdata[2] == "Multiband EQ" :
+                        os.system('cp -f "' + varPathDecode + '" ' + presetdir1 )
+                        print("Preset imported successfully.", 'cp -f "' + varPathDecode + '" ' + presetdir1 )
+
+                        # Refresh (and therefore, sort) preset list
+                        os.system(f'{pulseaudio_scrip} interface.getsettings')
+                        GetSettings()
+
+                        # Repopulate preset list into ComboBox
+                        model0 = self.presetsbox.get_model()
+                        #self.presetsbox.set_model(None)
+                        self.presetsbox.remove_all()
+                        model0.clear()
+                        model1 = self.presetsbox1.get_model()
+                        #self.presetsbox1.set_model(None)
+                        self.presetsbox1
+                        model1.clear()
+                        
+                        boxindex = 0
+                        for i in range(len(rawpresets)):
+                            print(i)
+                            #model0.append( [rawpresets[i]] )
+                            #model1.append( [rawpresets[i]] )
+                            self.presetsbox.append_text(rawpresets[i])
+                            self.presetsbox1.append_text(rawpresets[i])
+                            if rawpresets[i] == rawdata[4]:
+                                boxindex = i
+                        #self.presetsbox.set_model(model0)
+                        #self.presetsbox1.set_model(model1)
+                        self.presetsbox.set_active(boxindex)
+                        self.presetsbox1.set_active(boxindex)
+
+                else:
+                    print('file ',varPathDecode,'not found')
+
 
     def __init__(self, *args, **kwargs):
         super(Equalizer, self).__init__(*args, **kwargs)
@@ -797,6 +856,12 @@ class Equalizer(Gtk.ApplicationWindow):
             self.grid.attach(scale, x, 1, 1, 2)
             self.grid.attach(scalevalue, x, 3, 1, 1)
 
+        self.connect('drag_data_received', self.on_drag_data_received)
+        self.drag_dest_set( Gtk.DestDefaults.MOTION|
+                            Gtk.DestDefaults.HIGHLIGHT | Gtk.DestDefaults.DROP,
+                            [Gtk.TargetEntry.new("text/uri-list", 0, 80)], 
+                            Gdk.DragAction.COPY)
+
         action = Gio.SimpleAction.new('save', None)
         #action.set_enabled(False)
         action.connect('activate', self.on_savepreset)
@@ -826,7 +891,6 @@ class Equalizer(Gtk.ApplicationWindow):
         action = Gio.SimpleAction.new('on_delete', None)
         action.connect('activate', self.on_delete)
         self.add_action(action)
-   
 
         self.presetsbox.get_child().set_text(preset)
         self.presetsbox1.get_child().set_text(preset)
@@ -911,7 +975,6 @@ class Application(Gtk.Application):
         action = Gio.SimpleAction.new('headerbarcheck', None)
         action.connect('activate', self.window.on_headerbarcheck)
         self.add_action(action)
-
 
     def do_activate(self):
         global init_stage
