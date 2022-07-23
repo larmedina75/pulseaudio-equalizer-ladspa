@@ -7,7 +7,7 @@ I like to play Spotify or other audio sources and get a good sound. Other equali
 
 ![Image of Pulseaudio equalizer for Linux](https://www.comoinstalarlinux.com/wp-content/uploads/pulseaudio-equalizer-ladspa-2021.11-comoinstalarlinux.com-equalizer-ecualizador-liunx-ubuntu-mint-debian-mx-gtk3-gnome3.png)
 
-Features on version 2022.07
+## Features on version 2022.07
 
   * Import presets by drag and drop a .preset file, feature enabled again.
   * Fixed error that mishandle the actual preset list when a personal preset is deleted
@@ -34,9 +34,10 @@ Features on version 2022.07
 
 ## Todo
 
-  * Automatically detect non Gnome 3 Desktop environments 
+  * Automatically detect non Gnome 3 Desktop environments (MATE, Cinnamon, XFce, etc.)
   * Export all user presets
   * Multi language support
+  * experimental pipewire support
 
 ### Original Sources
 
