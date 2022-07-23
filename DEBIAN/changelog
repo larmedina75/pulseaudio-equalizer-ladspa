@@ -1,4 +1,9 @@
-pulseaudio-equalizer-ladspa (2021.11.0-1extras) ; urgency=low
+pulseaudio-equalizer-ladspa (2022.07.0-0_all) ; urgency=low
+
+version 2022.07
+
+  * Import presets by drag and drop a .preset file, feature enabled again.
+  * Fixed error that mishandle the actual preset list when a personal preset is deleted
 
 version 2021.11
 
