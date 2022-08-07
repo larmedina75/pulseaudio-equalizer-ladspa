@@ -504,28 +504,31 @@ class Equalizer(Gtk.ApplicationWindow):
     @Gtk.Template.Callback()
     def on_delete(self, widget):
         global preset
-        os.remove(os.path.join(USER_PRESET_DIR, preset + '.preset'))
+        if os.path.exists(os.path.join(USER_PRESET_DIR, preset + '.preset')):
+            os.remove(os.path.join(USER_PRESET_DIR, preset + '.preset'))
 
-        self.presetsbox.get_child().set_text('')
-        self.presetsbox1.get_child().set_text('')
+            self.presetsbox.get_child().set_text('')
+            self.presetsbox1.get_child().set_text('')
 
-        # Clear preset list from ComboBox
-        self.presetsbox.remove_all()
-        self.presetsbox1.remove_all()
-       
-        # Apply settings (which will save new preset as default)
-        ApplySettings()
+            # Clear preset list from ComboBox
+            self.presetsbox.remove_all()
+            self.presetsbox1.remove_all()
+           
+            # Apply settings (which will save new preset as default)
+            ApplySettings()
 
-        # Refresh (and therefore, sort) preset list
-        os.system(f'{pulseaudio_scrip} interface.getsettings')
-        GetSettings()
+            # Refresh (and therefore, sort) preset list
+            os.system(f'{pulseaudio_scrip} interface.getsettings')
+            GetSettings()
 
-        # Repopulate preset list into ComboBox
-        for i in range(len(rawpresets)):
-            self.presetsbox.append_text(rawpresets[i])
-            self.presetsbox1.append_text(rawpresets[i])
+            # Repopulate preset list into ComboBox
+            for i in range(len(rawpresets)):
+                self.presetsbox.append_text(rawpresets[i])
+                self.presetsbox1.append_text(rawpresets[i])
 
-        preset = ''
+            preset = ''
+        else:
+            pass # show dialog window "user preset does not exist."
 
     @Gtk.Template.Callback()
     def on_about_activate(self, widget):
