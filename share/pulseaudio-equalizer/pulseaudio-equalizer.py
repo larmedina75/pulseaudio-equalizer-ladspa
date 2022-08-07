@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # PulseAudio Equalizer (PyGtk Interface)
-# version: 2021.11
+# version: 2022.08
 #
 # Maintainer: Luis Armando Medina Avitia <lamedina AT gmail DOT com>
 #
@@ -28,6 +28,7 @@ CONFIG_FILE = os.path.join(CONFIG_DIR, 'equalizerrc')
 PRESETS_FILE = os.path.join(CONFIG_DIR, 'equalizerrc.availablepresets')
 USER_PRESET_DIR = os.path.join(CONFIG_DIR, 'presets')
 SYSTEM_PRESET_DIR = os.path.join('/usr/share/pulseaudio-equalizer', 'presets')
+PLUGIN_PRESENT = False
 if os.environ.get('GNOME_DESKTOP_SESSION_ID'):
     DESKTOP_ENVIRONMENT = "Gnome"
 else:
@@ -35,9 +36,12 @@ else:
 
 if not os.path.exists('/usr/lib/ladspa/mbeq_1197.so'):
     print("Warning: Missing pluseaudio plug-in. Please install the swh-plugins package. ")
+else:
+    PLUGIN_PRESENT = True
 
 print(CONFIG_DIR)
 print(SYSTEM_PRESET_DIR)
+print(DESKTOP_ENVIRONMENT)
 
 from urllib.request import url2pathname, urlparse, unquote
 from gi.repository import GdkPixbuf, Gdk
@@ -48,7 +52,7 @@ eqconfig2 = configdir + '/equalizerrc.test'
 eqpresets = eqconfig + '.availablepresets'
 presetdir1 = configdir + '/presets'
 presetdir2 = '/usr/share/pulseaudio-equalizer/presets'
-pulseaudio_scrip =  "pulseaudio-equalizer" #"pulseaudio-equalizer"
+pulseaudio_scrip =  "pulseaudio-equalizer"
 
 TARGET_TYPE_URI_LIST = 80
 
@@ -218,9 +222,14 @@ class Equalizer(Gtk.ApplicationWindow):
     menustd: Gtk.MenuBar = Gtk.Template.Child()
     actionbar: Gtk.ActionBar = Gtk.Template.Child()
 
+    dialog_message: Gtk.Label = Gtk.Template.Child('message')
+
     window_about = Gtk.Template.Child('About')
     window_title: Gtk.Label = Gtk.Template.Child('title')
     window_save = Gtk.Template.Child('Save_dialog')
+
+    window_dialog = Gtk.Template.Child('Message_dialog')
+
 
     def on_scale(self, widget, y):
         global ladspa_controls
@@ -917,6 +926,14 @@ class Equalizer(Gtk.ApplicationWindow):
         self.add_action(action)
 
         self.show()
+
+        if not PLUGIN_PRESENT :
+            # when swh plug-ins are not installed a warning message is displayed
+            self.dialog_message.title = "Warning"
+            self.dialog_message.set_text("Warning: Missing pluseaudio plug-in. Please install the swh-plugins package.")
+            result = self.window_dialog.run()
+            if result == -3 :
+                self.window_dialog.hide()
         
 
 class FrequencyLabel(Gtk.Label):

@@ -7,7 +7,7 @@
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <property name="program-name">Pulseaudio Equalizer</property>
-    <property name="version">2022.07</property>
+    <property name="version">2022.08</property>
     <property name="copyright" translatable="yes">
 Copyleft (ɔ) 2018 - 2022 
 by Luis Armando Medina Avitia. &lt;lamedina@gmail.com&gt;
@@ -65,6 +65,112 @@ JuanJo Ciarlante https://github.com/jjo
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkDialog" id="Message_dialog">
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Warning</property>
+    <property name="icon-name">dialog-information</property>
+    <property name="type-hint">dialog</property>
+    <property name="gravity">center</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkButton" id="button3">
+                <property name="label">gtk-ok</property>
+                <property name="name">ok_button</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="use-stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <!-- n-columns=3 n-rows=3 -->
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <child>
+              <object class="GtkLabel" id="message">
+                <property name="name">message</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="xpad">12</property>
+                <property name="ypad">24</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="xpad">12</property>
+                <property name="ypad">12</property>
+                <property name="stock">gtk-dialog-warning</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="-3">button3</action-widget>
+    </action-widgets>
   </object>
   <object class="GtkDialog" id="Save_dialog">
     <property name="can-focus">False</property>
