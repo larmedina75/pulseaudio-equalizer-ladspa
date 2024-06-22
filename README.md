@@ -7,8 +7,18 @@ I like to play Spotify or other audio sources and get a good sound. Other equali
 
 ![Image of Pulseaudio equalizer for Linux](https://www.comoinstalarlinux.com/wp-content/uploads/pulseaudio-equalizer-ladspa-2021.11-comoinstalarlinux.com-equalizer-ecualizador-liunx-ubuntu-mint-debian-mx-gtk3-gnome3.png)
 
+## Features on version 2024.07
+
+  * Export all user presets to a folder is posible
+  * Tow more presets added Gospel, and Blues
+  * Fixed error when trying to delete a non user preset
+  * Fixed LADSPA plugin multiband EQ module listed after uninstall
+  * if swh plug-ins are not installed, a warning message is displayed
+
 ## Features on version 2022.07
 
+  * Debian packages for Ubuntu 21.10 and earlier with zstd compression support
+  * Debian packages with tar.zx compression support 
   * Import presets by drag and drop a .preset file, feature enabled again.
   * Fixed error that mishandle the actual preset list when a personal preset is deleted
 
@@ -35,7 +45,6 @@ I like to play Spotify or other audio sources and get a good sound. Other equali
 ## Todo
 
   * Automatically detect non Gnome 3 Desktop environments (MATE, Cinnamon, XFce, etc.)
-  * Export all user presets
   * Multi language support
   * experimental pipewire support
 

@@ -1,4 +1,12 @@
-pulseaudio-equalizer-ladspa (2022.07.0-0_all) ; urgency=low
+pulseaudio-equalizer-ladspa (2022.08.0-0_all) ; urgency=low
+
+version 2022.08
+
+  * Debian packages for Ubuntu 21.10 and earlier with zstd compression support
+  * Debian packages with tar.zx compression support 
+  * Fixed error when trying to delete a non user preset
+  * Fixed LADSPA plugin multiband EQ module listed after uninstall
+  * if swh plug-ins are not installed, a warning message is displayed
 
 version 2022.07
 
