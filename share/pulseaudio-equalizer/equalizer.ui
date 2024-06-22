@@ -7,9 +7,9 @@
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <property name="program-name">Pulseaudio Equalizer</property>
-    <property name="version">2022.08</property>
+    <property name="version">2024.07</property>
     <property name="copyright" translatable="yes">
-Copyleft (ɔ) 2018 - 2022 
+Copyleft (ɔ) 2018 - 2024 
 by Luis Armando Medina Avitia. &lt;lamedina@gmail.com&gt;
 México
 </property>
@@ -21,7 +21,7 @@ when you use PulseAudio</property>
 Luis Armando Medina Avitia &lt;lamedina@gmail.com&gt;
 Project's Homepage: http://comoinstalarlinux.com/pulseaudio-equalizer-ladspa
  
-Copyleft (ɔ) 2021, 2022 
+Copyleft (ɔ) 2021, 2022, 2023, 2024 
 by Luis Armando Medina Avitia. &lt;lamedina@gmail.com&gt; 
 México
  
@@ -284,6 +284,11 @@ JuanJo Ciarlante https://github.com/jjo
     <property name="can-focus">False</property>
     <property name="icon-name">document-save</property>
   </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">document-open</property>
+  </object>
   <template class="Equalizer" parent="GtkApplicationWindow">
     <property name="can-focus">False</property>
     <property name="icon-name">multimedia-volume-control</property>
@@ -328,6 +333,17 @@ JuanJo Ciarlante https://github.com/jjo
                         <property name="image">image1</property>
                         <property name="use-stock">False</property>
                         <signal name="activate" handler="on_exportpreset" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="export-all">
+                        <property name="label">Export _All</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use-stock">False</property>
+                        <signal name="activate" handler="on_exportallpresets" swapped="no"/>
                       </object>
                     </child>
                     <child>

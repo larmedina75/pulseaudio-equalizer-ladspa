@@ -17,6 +17,8 @@ gi.check_version('3.30')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib
 import os, sys
+import shutil
+import subprocess
 
 if 'PULSE_CONFIG_PATH' in os.environ:
     CONFIG_DIR = os.getenv('PULSE_CONFIG_PATH')
@@ -52,7 +54,8 @@ eqconfig2 = configdir + '/equalizerrc.test'
 eqpresets = eqconfig + '.availablepresets'
 presetdir1 = configdir + '/presets'
 presetdir2 = '/usr/share/pulseaudio-equalizer/presets'
-pulseaudio_scrip =  "pulseaudio-equalizer"
+pulseaudio_scrip =  "/home/lm/Dev/pulseaudio-equalizer-ladspa/bin/pulseaudio-equalizer"
+#pulseaudio_scrip =  "/usr/bin/pulseaudio-equalizer"
 
 TARGET_TYPE_URI_LIST = 80
 
@@ -201,8 +204,8 @@ def FormatLabels(x):
     if len(c) < 2 and len(suffix) == 3:
         whitespace1 = '  '
 
-#@Gtk.Template(filename='../share/pulseaudio-equalizer/equalizer.ui')
-@Gtk.Template(filename='/usr/share/pulseaudio-equalizer/equalizer.ui')
+@Gtk.Template(filename='../share/pulseaudio-equalizer/equalizer.ui')
+#@Gtk.Template(filename='/usr/share/pulseaudio-equalizer/equalizer.ui')
 class Equalizer(Gtk.ApplicationWindow):
     __gtype_name__= "Equalizer"
 
@@ -747,7 +750,38 @@ class Equalizer(Gtk.ApplicationWindow):
             f.close()
 
         dialog.destroy()
-    
+
+    @Gtk.Template.Callback()
+    def on_exportallpresets(self, widget):
+        global preset
+        global presets
+        global presetdir1
+
+        print('on_exportallpresets')
+        dialog = Gtk.FileChooserDialog(title='Export All Presets...',
+                                       parent=None, 
+                                       action=Gtk.FileChooserAction.SELECT_FOLDER)
+        dialog.add_buttons(Gtk.STOCK_CANCEL,Gtk.ResponseType.CANCEL)
+        dialog.add_buttons(Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        dialog.set_default_response(Gtk.ResponseType.OK)
+
+        xdg_bin = shutil.which('xdg-user-dir')
+        process = subprocess.run([xdg_bin, 'DOWNLOAD'], stdout=subprocess.PIPE)
+        download_path = process.stdout.strip().decode()
+
+        dialog.set_current_folder(download_path)
+        dialog.show()
+
+        response = dialog.run()
+        print(response)
+
+        if response == Gtk.ResponseType.OK:
+            export_path = dialog.get_filename()
+            print(export_path)
+            shutil.copytree(presetdir1, export_path, symlinks=False, ignore=None, ignore_dangling_symlinks=False, dirs_exist_ok=True)
+
+        dialog.destroy()
+
     def on_drag_data_received(self, widget, context, x, y, selection, target_type, timestamp):
         global preset
         global presets
@@ -882,6 +916,10 @@ class Equalizer(Gtk.ApplicationWindow):
 
         action = Gio.SimpleAction.new('on_exportpreset', None)
         action.connect('activate', self.on_exportpreset)
+        self.add_action(action)
+
+        action = Gio.SimpleAction.new('on_exportallpresets', None)
+        action.connect('activate', self.on_exportallpresets)
         self.add_action(action)
         
         action = Gio.SimpleAction.new('on_save', None)
